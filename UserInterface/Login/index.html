@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Track - Real-time Vehicle Tracking & Fleet Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M8 12L16 4L24 12M8 20L16 12L24 20M4 28H28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>FleetTrack</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#tech-stack">Tech Stack</a>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#contact">Contact</a>
+            </div>
+<a href="login.html" class="cta-button">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Real-time GPS Tracking System
+            </div>
+            <h1 class="hero-title">Monitor Your Fleet in Real-Time</h1>
+            <p class="hero-subtitle">Complete visibility into vehicle locations, driver behavior, and trip performance with AI-powered insights and predictive maintenance alerts.</p>
+            <div class="hero-buttons">
+                <button class="button-primary">Start Free Trial</button>
+                <button class="button-secondary">Watch Demo</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Active Vehicles</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">50ms</div>
+                    <div class="stat-label">Live Update</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features for Complete Fleet Management</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L15.09 8.26H22L17.36 12.7L19.54 18.96L12 14.49L4.46 18.96L6.64 12.7L2 8.26H8.91L12 2Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Live GPS Tracking</h3>
+                    <p>View real-time vehicle positions on interactive maps with live location updates every 3-5 seconds.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Driver Monitoring</h3>
+                    <p>Track driving behavior including speed, acceleration, harsh braking, and idle time with performance ratings.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Geofencing Alerts</h3>
+                    <p>Set custom geofences and receive instant notifications when vehicles enter or leave designated zones.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2zm4 8h2v8h-2z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Comprehensive dashboards with trip history, performance metrics, fuel costs, and detailed analytics.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.3-1.54-4.48 6.71h17.85L13.96 9.29z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Maintenance Alerts</h3>
+                    <p>Predictive maintenance notifications based on usage patterns and service history to prevent breakdowns.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.72-7 8.77V12H5V6.3l7-3.11v8.8z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Secure Admin Dashboard</h3>
+                    <p>Role-based access control with JWT authentication and real-time WebSocket updates for admins.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-stack" id="tech-stack">
+        <div class="container">
+            <h2 class="section-title">Built with Modern Technology</h2>
+            <p class="section-subtitle">Enterprise-grade stack ensuring reliability, performance, and scalability</p>
+            
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h3>Frontend</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">React.js</div>
+                        <div class="tech-item">Mapbox GL</div>
+                        <div class="tech-item">WebSockets</div>
+                        <div class="tech-item">JavaScript</div>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3>Backend</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">Node.js</div>
+                        <div class="tech-item">Express.js</div>
+                        <div class="tech-item">Socket.io</div>
+                        <div class="tech-item">REST APIs</div>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3>Database & Cache</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">MongoDB</div>
+                        <div class="tech-item">Redis</div>
+                        <div class="tech-item">Mongoose ODM</div>
+                        <div class="tech-item">ElasticSearch</div>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3>Infrastructure</h3>
+                    <div class="tech-items">
+                        <div class="tech-item">RabbitMQ/BullMQ</div>
+                        <div class="tech-item">Prometheus</div>
+                        <div class="tech-item">JWT Auth</div>
+                        <div class="tech-item">Bcrypt</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="dashboard-preview" id="dashboard">
+        <div class="container">
+            <h2 class="section-title">Admin Dashboard Preview</h2>
+            <p class="section-subtitle">Comprehensive control center for fleet management</p>
+            
+            <div class="dashboard-mockup">
+                <div class="dashboard-header">
+                    <div class="header-left">
+                        <h3>Fleet Dashboard</h3>
+                    </div>
+                    <div class="header-right">
+                        <span class="notification">🔔</span>
+                        <span class="profile">👤</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-body">
+                    <div class="sidebar-menu">
+                        <div class="menu-item active">📊 Dashboard</div>
+                        <div class="menu-item">🚗 Vehicles</div>
+                        <div class="menu-item">👨 Drivers</div>
+                        <div class="menu-item">🛣️ Trips</div>
+                        <div class="menu-item">📍 Live Tracking</div>
+                        <div class="menu-item">📈 Reports</div>
+                        <div class="menu-item">⚠️ Alerts</div>
+                        <div class="menu-item">🔧 Maintenance</div>
+                    </div>
+
+                    <div class="dashboard-content">
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-label">Total Vehicles</div>
+                                <div class="stat-value">156</div>
+                                <div class="stat-change">↑ 12 this month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Vehicles Active</div>
+                                <div class="stat-value">142</div>
+                                <div class="stat-change">90.9% fleet online</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Alerts Today</div>
+                                <div class="stat-value">23</div>
+                                <div class="stat-change">5 critical alerts</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Trips Ongoing</div>
+                                <div class="stat-value">18</div>
+                                <div class="stat-change">~2.5 hours avg</div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-widgets">
+                            <div class="widget">
+                                <h4>Live Map Preview</h4>
+                                <div class="mini-map">
+                                    <div class="vehicle-pin">🚗</div>
+                                    <div class="vehicle-pin offset-1">🚗</div>
+                                    <div class="vehicle-pin offset-2">🚗</div>
+                                </div>
+                            </div>
+
+                            <div class="widget">
+                                <h4>Recent Alerts</h4>
+                                <div class="alert-list">
+                                    <div class="alert-item alert-warning">⚠️ Overspeed - Vehicle #342</div>
+                                    <div class="alert-item alert-warning">⚠️ Route Deviation - Vehicle #521</div>
+                                    <div class="alert-item alert-info">ℹ️ Maintenance Due - Vehicle #108</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Fleet Management?</h2>
+                <p>Join leading logistics and transportation companies using FleetTrack</p>
+                <button class="button-primary large">Get Started Today</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>FleetTrack</h4>
+                    <p>Real-time vehicle tracking and fleet management system</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <a href="#features">GPS Tracking</a>
+                    <a href="#features">Driver Monitoring</a>
+                    <a href="#features">Analytics</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 FleetTrack. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

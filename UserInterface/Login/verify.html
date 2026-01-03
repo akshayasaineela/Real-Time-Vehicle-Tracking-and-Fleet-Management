@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - FleetTrack</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <h2>Enter OTP</h2>
+        <p class="auth-subtitle">We sent a 6-digit OTP to your email</p>
+
+        <form id="verifyForm">
+            <div class="input-group">
+                <label>OTP</label>
+                <input type="text" id="otp" maxlength="6" required>
+            </div>
+
+            <button type="submit" class="button-primary full">Verify OTP</button>
+        </form>
+
+        <p class="auth-footer">
+            Didn't receive OTP? <a href="forgot.html">Resend</a>
+        </p>
+    </div>
+
+<script>
+const api = "http://localhost:5000/api/auth";
+
+document.getElementById("verifyForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const otp = document.getElementById("otp").value;
+    const email = localStorage.getItem("resetEmail");
+
+    const res = await fetch(`${api}/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        window.location.href = "reset.html";
+    } else {
+        alert(data.message);
+    }
+});
+</script>
+
+</body>
+</html>

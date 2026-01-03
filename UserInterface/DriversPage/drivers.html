@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FleetMaster – Drivers</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Chart.js for trip history chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-truck-moving"></i>
+            <h2>FleetMaster</h2>
+        </div>
+     <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Drivers Overview</h1>
+                <p class="header-subtitle">Manage your fleet drivers efficiently</p>
+            </div>
+            <div class="header-right">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+                    <img src="#" alt="User" />
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Fleet Manager</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Drivers Stats Row -->
+        <section class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Drivers</h3>
+                    <p class="stat-number" id="statTotalDrivers">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Avg Rating</h3>
+                    <p class="stat-number" id="statAvgRating">0.0</p>
+                </div>
+            </div>
+
+            <div class="stat-card orange">
+                <div class="stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Trips</h3>
+                    <p class="stat-number" id="statTotalTrips">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card red">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Violations</h3>
+                    <p class="stat-number" id="statTotalViolations">0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls Section -->
+        <section class="drivers-controls">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search drivers by name..."
+                />
+            </div>
+
+            <div class="sort-buttons">
+                <button class="btn btn-secondary active" data-sort="name">
+                    Sort by Name
+                </button>
+                <button class="btn btn-secondary" data-sort="rating">
+                    Sort by Rating
+                </button>
+                <button class="btn btn-secondary" data-sort="trips">
+                    Sort by Trips
+                </button>
+            </div>
+
+            <div class="controls-right">
+                <button class="btn btn-secondary" id="exportBtn">
+                    <i class="fas fa-file-export"></i> Export Excel
+                </button>
+                <button class="btn btn-primary" id="addDriverBtn">
+                    <i class="fas fa-plus"></i> Add Driver
+                </button>
+            </div>
+        </section>
+
+        <!-- Drivers Grid -->
+        <section class="drivers-grid" id="driversGrid"></section>
+    </main>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModalBtn">×</button>
+
+            <div class="modal-header">
+                <img
+                    id="modalDriverPhoto"
+                    class="modal-photo"
+                    src="#"
+                    alt="Driver Photo"
+                />
+                <div class="modal-header-info">
+                    <h2 id="modalDriverName" class="modal-title"></h2>
+                    <div class="modal-stats">
+                        <span id="modalDriverRating" class="stat-badge"></span>
+                        <span id="modalDriverTrips" class="stat-badge"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3 class="section-title">Contact Details</h3>
+                <div class="contact-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Phone</span>
+                        <span id="modalDriverPhone" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">License Number</span>
+                        <span id="modalDriverLicense" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">License Expiry</span>
+                        <span id="modalDriverExpiry" class="detail-value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Assigned Vehicle</span>
+                        <span id="modalAssignedVehicle" class="detail-value"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3 class="section-title">Performance Overview</h3>
+                <div class="performance-grid">
+                    <div class="performance-card">
+                        <div class="perf-label">Total Trips</div>
+                        <div id="modalPerformanceTrips" class="perf-value"></div>
+                    </div>
+                    <div class="performance-card">
+                        <div class="perf-label">Violations</div>
+                        <div id="modalPerformanceViolations" class="perf-value"></div>
+                    </div>
+                    <div class="performance-card">
+                        <div class="perf-label">Rating</div>
+                        <div id="modalPerformanceRating" class="perf-value"></div>
+                    </div>
+                    <div class="performance-card">
+                        <div class="perf-label">Avg Distance</div>
+                        <div id="modalPerformanceDistance" class="perf-value"></div>
+                    </div>
+                </div>
+            </div>
+<div class="modal-section">
+    <h3 class="section-title">Driving Behaviour Metrics</h3>
+    <div class="performance-grid">
+        
+        <div class="performance-card">
+            <div class="perf-label">Overspeed Events</div>
+            <div id="perfOverspeed" class="perf-value">0</div>
+        </div>
+
+        <div class="performance-card">
+            <div class="perf-label">Harsh Braking</div>
+            <div id="perfHarshBrake" class="perf-value">0</div>
+        </div>
+
+        <div class="performance-card">
+            <div class="perf-label">Harsh Acceleration</div>
+            <div id="perfHarshAccel" class="perf-value">0</div>
+        </div>
+
+        <div class="performance-card">
+            <div class="perf-label">Idle Time (min)</div>
+            <div id="perfIdle" class="perf-value">0</div>
+        </div>
+
+        <div class="performance-card">
+            <div class="perf-label">Fatigue Alerts</div>
+            <div id="perfFatigue" class="perf-value">0</div>
+        </div>
+
+        <div class="performance-card">
+            <div class="perf-label">Performance Score</div>
+            <div id="perfScore" class="perf-value">100</div>
+        </div>
+
+    </div>
+</div>
+
+       
+
+<div class="modal-section">
+    <h3 class="section-title">Completed Trips</h3>
+
+    <table class="trip-history-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Distance (km)</th>
+                <th>Duration (min)</th>
+            </tr>
+        </thead>
+        <tbody id="driverTripHistoryBody"></tbody>
+</table>
+</div>
+
+</div> <!-- ✅ closes .modal-content of profileModal -->
+</div> <!-- ✅ closes #profileModal -->
+
+
+    <!-- Add/Edit Driver Modal -->
+    <div class="modal" id="addDriverModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeAddDriverBtn">×</button>
+            <h2 class="modal-title" id="addEditTitle">Add New Driver</h2>
+
+            <form id="addDriverForm" class="add-driver-form">
+                <div class="form-group">
+                    <label for="name" class="form-label">Driver Name *</label>
+                    <input type="text" id="name" class="form-input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number *</label>
+                    <input type="tel" id="phone" class="form-input" required />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="license" class="form-label">License Number *</label>
+                        <input type="text" id="license" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="licenseExpiry" class="form-label">License Expiry *</label>
+                        <input type="date" id="licenseExpiry" class="form-input" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rating" class="form-label">Rating (0-5)</label>
+                        <input type="number" id="rating" class="form-input" min="0" max="5" step="0.1" />
+                    </div>
+                    <div class="form-group">
+                        <label for="trips" class="form-label">Total Trips</label>
+                        <input type="number" id="trips" class="form-input" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="violations" class="form-label">Violations</label>
+                        <input type="number" id="violations" class="form-input" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="avgDistance" class="form-label">Avg Distance</label>
+                        <input type="text" id="avgDistance" class="form-input" placeholder="250 km" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignedVehicle" class="form-label">Assigned Vehicle</label>
+                    <input type="text" id="assignedVehicle" class="form-input" placeholder="TS09 AB 1247" />
+                </div>
+
+                <div class="form-group">
+                    <label for="photoFile" class="form-label">Profile Photo</label>
+                    <input type="file" id="photoFile" class="form-input" accept="image/*" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAddEditBtn">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Add Driver
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Completed Trips</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #f3f5fb;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .page-header {
+      padding: 22px 28px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 26px;
+      padding: 24px 28px;
+    }
+
+    .trip-card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      transition: 0.25s ease;
+    }
+
+    .trip-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+
+    .trip-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 8px;
+    }
+
+    .trip-row {
+      font-size: 14px;
+      color: #374151;
+      margin: 4px 0;
+    }
+
+    .trip-label {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .trip-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .delete-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+    }
+
+    .empty-msg {
+      padding: 40px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">✅ Completed Trips</div>
+
+<div id="tripGrid" class="trip-grid"></div>
+
+<script>
+const apiBase = "http://localhost:5000/api";
+
+async function loadTrips() {
+  const res = await fetch(`${apiBase}/trips?status=completed`);
+  const trips = await res.json();
+
+  const grid = document.getElementById("tripGrid");
+
+  if (trips.length === 0) {
+    grid.innerHTML = `<div class="empty-msg">No completed trips found.</div>`;
+    return;
+  }
+
+  grid.innerHTML = trips.map(t => `
+    <div class="trip-card">
+      <div class="trip-title">${t.name || "Trip Record"}</div>
+
+      
+      <div class="trip-row"><span class="trip-label">From:</span> ${t.origin}</div>
+      <div class="trip-row"><span class="trip-label">To:</span> ${t.destination}</div>
+
+<div class="trip-row">
+    <span class="trip-label">Driver:</span>
+    ${t.driver?.driver || t.driver?.name || t.driver?.driverName || "N/A"}
+</div>
+    <div class="trip-row"><span class="trip-label">Vehicle: ${t.vehicle?.vehicleNumber || t.vehicle || "N/A"}
+</div>
+      <div class="trip-row"><span class="trip-label">Status:</span> ✅ Completed</div>
+
+      <div class="trip-actions">
+        <button class="delete-btn" onclick="deleteTrip('${t._id}')">
+          Remove
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function deleteTrip(id) {
+  const confirmDelete = confirm("Delete this completed trip?");
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`${apiBase}/trips/${id}`, {
+      method: "DELETE"
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Trip deleted successfully!");
+      loadTrips();
+    } else {
+      alert("Delete failed");
+    }
+
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Server error");
+  }
+}
+
+loadTrips();
+</script>
+
+</body>
+</html>

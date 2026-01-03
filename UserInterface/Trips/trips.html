@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FleetMaster – Trips</title>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+  <!-- ===== HAMBURGER (Mobile) ===== -->
+  <button class="hamburger-btn" id="hamburgerBtn">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+      <i class="fas fa-truck-moving"></i>
+        <h2>FleetMaster</h2>
+      <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+    </div>
+ <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div class="left-group">
+        <button class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+        <h1>Trips</h1>
+      </div>
+      <button class="add-btn">+ Add Trip</button>
+    </header>
+
+    <section class="cards-container">
+
+      <div class="trip-card">
+        <img src="./Images/ongoing.png">
+        <h3>Ongoing Trips</h3>
+        <p>Live and active trips currently running.</p>
+        <button class="view-btn" onclick="location.href='ongoing.html'">View Details</button>
+      </div>
+
+      <div class="trip-card">
+        <img src="./Images/completed.png">
+        <h3>Completed Trips</h3>
+        <p>Trips that finished successfully.</p>
+        <button class="view-btn" onclick="location.href='completed.html'">View Details</button>
+
+      </div>
+
+      <div class="trip-card">
+        <img src="./Images/scheduled.jpg">
+        <h3>Scheduled Trips</h3>
+        <p>Trips planned for upcoming schedules.</p>
+        <button class="view-btn" onclick="location.href='scheduled.html'">View Details</button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- ========== ADD TRIP MODAL ========== -->
+<div id="tripModal" class="modal-overlay">
+  <div class="modal-box">
+    <h2>Add New Trip</h2>
+
+    <form id="tripForm">
+
+      <label>Trip Name (optional)</label>
+      <input type="text" id="tripName">
+
+      <label>Starting Point*</label>
+      <input type="text" id="startPoint" required>
+
+      <label>Destination*</label>
+      <input type="text" id="destination" required>
+
+      <label>Start Time*</label>
+<input type="datetime-local" id="startTime" required step="1">
+
+      <!-- <label>Estimated Duration*</label> -->
+      <!-- <input type="number" id="duration" required min="1"> -->
+
+      <!-- ===== Driver Selection ===== -->
+<label>Driver*</label>
+<button type="button" id="selectDriverBtn" class="select-btn">
+  Select Driver
+</button>
+<p id="selectedDriver">No driver selected</p>
+
+<!-- ===== Vehicle Selection ===== -->
+<label>Vehicle*</label>
+<button type="button" id="selectVehicleBtn" class="select-btn">
+  Select Vehicle
+</button>
+<p id="selectedVehicle">No vehicle selected</p>
+
+
+    <button type="submit" class="submit-btn">Add Trip</button>
+
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

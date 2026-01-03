@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FleetMaster – Settings</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-truck-moving"></i>
+            <h2>FleetMaster</h2>
+        </div>
+        
+      <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>Settings</h1>
+        <p class="header-subtitle">
+          Customize FleetMaster to match your workflow
+        </p>
+      </div>
+      <div class="header-right">
+        <div class="user-profile">
+          <div class="avatar" id="avatarCircle"></div>
+          <div class="user-info">
+            <span class="user-name" id="headerName">John Doe</span>
+            <span class="user-role" id="headerRole">Fleet Manager</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Quick stats pills -->
+    <section class="settings-stats">
+      <div class="stat-pill">
+        <i class="fas fa-moon"></i>
+        <span id="pillTheme">Theme: Light</span>
+      </div>
+      <div class="stat-pill">
+        <i class="fas fa-bell"></i>
+        <span id="pillAlerts">Alerts: Email + Push</span>
+      </div>
+      <div class="stat-pill">
+        <i class="fas fa-shield-alt"></i>
+        <span id="pillSecurity">Security: Standard</span>
+      </div>
+    </section>
+
+    <!-- Grid -->
+    <section class="settings-grid">
+
+      <!-- Profile card -->
+      <div class="settings-card">
+        <h2><i class="fas fa-user-circle"></i> Profile</h2>
+        <p class="card-subtitle">Basic account details & avatar</p>
+
+        <div class="profile-row">
+          <div class="avatar-large" id="avatarLarge"></div>
+
+          <div class="profile-fields">
+            <div class="form-group">
+              <label for="nameInput">Full Name</label>
+              <input id="nameInput" class="form-input" placeholder="Your name" />
+            </div>
+            <div class="form-group">
+              <label for="roleInput">Role / Title</label>
+              <input id="roleInput" class="form-input" placeholder="Fleet Manager" />
+            </div>
+            <div class="form-group">
+              <label for="emailInput">Email</label>
+              <input
+                id="emailInput"
+                class="form-input"
+                type="email"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="avatarColorInput">Avatar Accent Color</label>
+            <input id="avatarColorInput" class="form-input color-input" type="color" />
+          </div>
+          <div class="form-group">
+            <label for="photoInput">Profile Photo (optional)</label>
+            <input
+              id="photoInput"
+              class="form-input"
+              type="file"
+              accept="image/*"
+            />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveProfileBtn">
+            <i class="fas fa-save"></i> Save Profile
+          </button>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="settings-card">
+        <h2><i class="fas fa-sliders-h"></i> Preferences</h2>
+        <p class="card-subtitle">Language & time configuration</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="languageSelect">Language</label>
+            <select id="languageSelect" class="form-input">
+              <option value="en">English (EN)</option>
+              <option value="hi">Hindi (HI)</option>
+              <option value="te">Telugu (TE)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="timezoneSelect">Time Zone</label>
+            <select id="timezoneSelect" class="form-input">
+              <option value="IST">IST (India)</option>
+              <option value="UTC">UTC</option>
+              <option value="CET">CET (Europe)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateFormatSelect">Date Format</label>
+          <select id="dateFormatSelect" class="form-input">
+            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="savePreferencesBtn">
+            <i class="fas fa-save"></i> Save Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-card">
+        <h2><i class="fas fa-palette"></i> Appearance</h2>
+        <p class="card-subtitle">Theme & layout density</p>
+
+        <!-- Quick dark/light switch -->
+        <div class="toggle-row">
+          <span>Quick Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="themeSwitch" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>Theme Mode</label>
+          <div class="radio-group">
+            <label><input type="radio" name="theme" value="light" /> Light</label>
+            <label><input type="radio" name="theme" value="dark" /> Dark</label>
+            <label><input type="radio" name="theme" value="auto" /> Auto</label>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" id="compactModeInput" />
+            Compact mode (denser tables)
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveAppearanceBtn">
+            <i class="fas fa-save"></i> Save Appearance
+          </button>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="settings-card">
+        <h2><i class="fas fa-bell"></i> Notifications</h2>
+        <p class="card-subtitle">Control how alerts reach you</p>
+
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="emailAlertsInput" /> Email alerts</label>
+          <label><input type="checkbox" id="smsAlertsInput" /> SMS alerts</label>
+          <label><input type="checkbox" id="pushAlertsInput" /> Push notifications</label>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="checkbox-group">
+          <label
+            ><input type="checkbox" id="maintenanceRemindersInput" />
+            Maintenance reminders</label
+          >
+          <label
+            ><input type="checkbox" id="tripAlertsInput" />
+            Trip & route alerts</label
+          >
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveNotificationsBtn">
+            <i class="fas fa-save"></i> Save Notifications
+          </button>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="settings-card">
+        <h2><i class="fas fa-shield-alt"></i> Security</h2>
+        <p class="card-subtitle">Make your account safer</p>
+
+        <div class="form-group">
+          <label for="newPasswordInput">New Password</label>
+          <input
+            id="newPasswordInput"
+            class="form-input"
+            type="password"
+            placeholder="Leave empty to keep current"
+          />
+        </div>
+
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="twoFactorInput" /> 2-Step verification</label>
+          <label
+            ><input type="checkbox" id="loginAlertsInput" />
+            Email alert for new logins</label
+          >
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveSecurityBtn">
+            <i class="fas fa-save"></i> Save Security
+          </button>
+        </div>
+      </div>
+
+      <!-- Data & Backup -->
+      <div class="settings-card">
+        <h2><i class="fas fa-database"></i> Data & Backup</h2>
+        <p class="card-subtitle">Control FleetMaster data behaviour</p>
+
+        <div class="form-group">
+          <label for="backupFrequencySelect">Backup Frequency</label>
+          <select id="backupFrequencySelect" class="form-input">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="autoBackupInput" /> Auto backup to cloud</label>
+        </div>
+
+        <div class="form-actions space-between">
+          <button class="btn btn-secondary" id="backupBtn">
+            <i class="fas fa-cloud-download-alt"></i> Backup Now
+          </button>
+          <button class="btn btn-secondary" id="restoreBtn">
+            <i class="fas fa-history"></i> Restore Backup
+          </button>
+          <button class="btn btn-danger" id="deleteAccountBtn">
+            <i class="fas fa-user-slash"></i> Delete Account
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Settings saved</div>
+  </main>
+<!-- GLOBAL SETTINGS SCRIPT (Add This First) -->
+    <script src="/global/globalSettings.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

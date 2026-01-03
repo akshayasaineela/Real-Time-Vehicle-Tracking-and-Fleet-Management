@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Vehicle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f5fb;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-bottom: 5px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .card button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      border: none;
+      background: #16a34a;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Select Vehicle</h1>
+
+<input type="text" id="search" placeholder="Search vehicle...">
+
+<div class="grid" id="vehicleGrid"></div>
+
+<script>
+  const apiBase = "http://localhost:5000/api";
+  const grid = document.getElementById("vehicleGrid");
+  const search = document.getElementById("search");
+
+  let vehicles = [];
+
+  /* ============================================================
+     LOAD VEHICLES
+     - Uses availability list if present
+     - Otherwise loads all vehicles
+  ============================================================ */
+  async function loadVehicles() {
+    const available = JSON.parse(localStorage.getItem("availableVehicles")) || [];
+
+    if (available.length > 0) {
+      vehicles = available;
+    } else {
+      vehicles = await fetch(`${apiBase}/vehicles`).then(res => res.json());
+    }
+
+    render(vehicles);
+  }
+
+  /* ============================================================
+     RENDER VEHICLE CARDS
+  ============================================================ */
+  function render(list) {
+    grid.innerHTML = "";
+
+    list.forEach(v => {
+      const number = v.vehicleNumber || v.number || "Unknown";
+      const type = v.type || "-";
+      const status = v.status || "Available";
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <h3>${number}</h3>
+        <p>Type: ${type}</p>
+        <p>Status: ${status}</p>
+        <button>Select Vehicle</button>
+      `;
+
+      // ⭐ Correct storage keys
+      card.querySelector("button").onclick = () => {
+        localStorage.setItem("selectedVehicleId", v._id);
+        localStorage.setItem("selectedVehicleNumber", number);
+
+        // ⭐ Redirect back to the trip creation modal page
+        window.location.href = "trips.html";  
+      };
+
+      grid.appendChild(card);
+    });
+  }
+
+  /* ============================================================
+     SEARCH FILTER
+  ============================================================ */
+  search.addEventListener("input", () => {
+    const q = search.value.toLowerCase();
+    render(
+      vehicles.filter(v =>
+        (v.vehicleNumber || v.number || "").toLowerCase().includes(q)
+      )
+    );
+  });
+
+  loadVehicles();
+</script>
+
+</body>
+</html>

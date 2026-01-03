@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fleet Alerts | FleetMaster</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <div class="nav-title">
+        <h1>Fleet Alerts</h1>
+        <p>Live notifications for fleet safety, maintenance & performance</p>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div class="date-pill">
+        <i class="fa-regular fa-calendar"></i>
+        <span id="todayHeader">Today</span>
+      </div>
+      <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+      <div class="profile-pill">
+        <div class="avatar-circle">FA</div>
+        <div class="profile-text">
+          <span class="profile-name">Fleet Admin</span>
+          <span class="profile-role">Operations</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-truck-moving"></i>
+      <h2>FleetMaster</h2>
+    </div>
+
+     <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+  </aside>
+
+  <!-- Main Section -->
+  <main class="page-container">
+
+    <!-- Page title -->
+    <section class="page-header">
+      <div>
+        <h2>Alerts Center</h2>
+        <p>View and manage safety & maintenance fleet alerts</p>
+      </div>
+    </section>
+
+    <!-- KPI Cards -->
+    <section class="cards-row">
+      <div class="kpi-card blue">
+        <i class="fas fa-bell"></i>
+        <div>
+          <p>Total Alerts</p>
+          <h2 id="totalAlerts">0</h2>
+        </div>
+      </div>
+      <div class="kpi-card orange">
+        <i class="fas fa-exclamation-circle"></i>
+        <div>
+          <p>Critical</p>
+          <h2 id="criticalAlerts">0</h2>
+        </div>
+      </div>
+      <div class="kpi-card yellow">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div>
+          <p>Warnings</p>
+          <h2 id="warningAlerts">0</h2>
+        </div>
+      </div>
+      <div class="kpi-card green">
+        <i class="fas fa-circle-check"></i>
+        <div>
+          <p>Resolved</p>
+          <h2 id="resolvedAlerts">0</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters + Export -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h3>Alert Log</h3>
+          <p>Live record of all fleet alerts & notifications</p>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn secondary-btn download-pdf" data-table-id="alertTable">
+            <i class="fa-regular fa-file-pdf"></i> PDF
+          </button>
+          <button class="btn primary-btn export-excel" data-table-id="alertTable">
+            <i class="fa-regular fa-file-excel"></i> Excel
+          </button>
+        </div>
+      </div>
+
+      <div class="filters-row">
+        <div class="filter-group">
+          <label>Type</label>
+          <select id="alertTypeFilter" class="filter-input">
+            <option value="">All</option>
+            <option value="Critical">Critical</option>
+            <option value="Warning">Warning</option>
+            <option value="Info">Info</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Date</label>
+          <input type="date" id="alertDateFilter" class="filter-input" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table" id="alertTable">
+          <thead>
+            <tr>
+              <th>Date/Time</th>
+              <th>Vehicle</th>
+              <th>Driver</th>
+              <th>Type</th>
+              <th>Message</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JS fills alerts automatically -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+  </main>
+<!-- GLOBAL SETTINGS SCRIPT (Add This First) -->
+    <script src="/global/globalSettings.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

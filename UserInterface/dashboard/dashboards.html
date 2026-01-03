@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Management Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-truck-moving"></i>
+
+            <h2>FleetMaster</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintanance/maintanance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Dashboard Overview</h1>
+                <p class="header-subtitle">Welcome back, manage your fleet efficiently</p>
+            </div>
+            <div class="header-right">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="user-profile">
+<img src="https://via.placeholder.com/40" alt="User">
+                    <div class="user-info">
+                        <span class="user-name">John Doe</span>
+                        <span class="user-role">Fleet Manager</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Statistics Cards -->
+        <section class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Vehicles</h3>
+                    <p class="stat-number"></p>
+                    <span class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 
+                    </span>
+                </div>
+            </div>
+
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Vehicles Active</h3>
+                    <p class="stat-number"></p>
+                    <span class="stat-trend"></span>
+                </div>
+            </div>
+
+            <div class="stat-card orange">
+                <div class="stat-icon">
+                    <i class="fas fa-pause-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Idle Vehicles</h3>
+                    <p class="stat-number"></p>
+                    <span class="stat-trend"></span>
+                </div>
+            </div>
+
+            <div class="stat-card red">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Alerts Today</h3>
+                    <p class="stat-number">0</p>
+                    <span class="stat-trend warning">
+                        <i class="fas fa-arrow-up"></i> Requires attention
+                    </span>
+                </div>
+            </div>
+
+            <div class="stat-card purple">
+                <div class="stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Trips Ongoing</h3>
+                    <p class="stat-number"></p>
+                    <span class="stat-trend positive">
+                        <i class="fas fa-circle"></i> Live tracking
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Charts Section -->
+        <section class="analytics-section">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Trips Per Week</h3>
+                    <select class="chart-filter">
+                        <option>Last 4 Weeks</option>
+                        <option>Last 8 Weeks</option>
+                        <option>Last 12 Weeks</option>
+                    </select>
+                </div>
+                <canvas id="tripsChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Distance Estimated (km)</h3>
+                    <select class="chart-filter">
+                        <option>This Week</option>
+                        <option>This Month</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+                <canvas id="distanceChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Fuel Cost Estimation</h3>
+                    <select class="chart-filter">
+                        <option>Monthly</option>
+                        <option>Quarterly</option>
+                        <option>Yearly</option>
+                    </select>
+                </div>
+                <canvas id="fuelCostChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Live Map and Alerts Section -->
+        <section class="bottom-section">
+            <div class="map-container">
+                <div class="section-header">
+                    <h3>Live Fleet Map</h3>
+                    <button class="expand-btn">
+                        <i class="fas fa-expand"></i> Full View
+                    </button>
+                </div>
+                <div id="map"></div>
+            </div>
+
+            <div class="alerts-container">
+                <div class="section-header">
+                    <h3>Recent Alerts</h3>
+                    <span class="alerts-count">6 Active</span>
+                </div>
+                <div class="alerts-list">
+                    <div class="alert-item critical">
+                        <div class="alert-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Overspeed Detected</h4>
+                            <p>Vehicle #1247 exceeded 120 km/h</p>
+                            <span class="alert-time">2 minutes ago</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item warning">
+                        <div class="alert-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Maintenance Due</h4>
+                            <p>Vehicle #0892 service in 2 days</p>
+                            <span class="alert-time">1 hour ago</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item info">
+                        <div class="alert-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Route Deviation</h4>
+                            <p>Vehicle #1534 off planned route</p>
+                            <span class="alert-time">3 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item warning">
+                        <div class="alert-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Idle Too Long</h4>
+                            <p>Vehicle #2341 idle for 45 minutes</p>
+                            <span class="alert-time">4 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item critical">
+                        <div class="alert-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Maintenance Overdue</h4>
+                            <p>Vehicle #0765 needs immediate service</p>
+                            <span class="alert-time">5 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item info">
+                        <div class="alert-icon">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="alert-content">
+                            <h4>Low Fuel Alert</h4>
+                            <p>Vehicle #1923 fuel below 20%</p>
+                            <span class="alert-time">6 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

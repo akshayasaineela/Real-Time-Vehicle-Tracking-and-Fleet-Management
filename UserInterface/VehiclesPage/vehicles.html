@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>FleetMaster - Fleet Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+    defer
+  ></script>
+
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f3f4f6;
+      --bg-tertiary: #e5e7eb;
+      --accent-primary: #2563eb;
+      --accent-success: #16a34a;
+      --primary-blue: #3b82f6;
+      --light-bg: #f8fafc;
+      --accent-warning: #d97706;
+      --accent-danger: #dc2626;
+      --text-primary: #0f172a;
+      --text-secondary: #6b7280;
+      --border-color: #e2e8f0;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --sidebar-bg: radial-gradient(circle at top left, #0f172a, #020617);
+      --sidebar-border: rgba(148, 163, 184, 0.3);
+      --sidebar-text: #e5e7eb;
+      --sidebar-muted: #9ca3af;
+      --sidebar-active-bg: rgba(148, 163, 184, 0.18);
+      --sidebar-accent: #38bdf8;
+      --scrollbar-thumb: #cbd5f5;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+      background: var(--light-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ========= APP LAYOUT ========= */
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+      background: radial-gradient(
+        circle at top left,
+        #0b1120 0,
+        #020617 18%,
+        #020617 0,
+        #020617 100%
+      );
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      color: var(--sidebar-text);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 6px 4px;
+    }
+    .sidebar-logo i {
+      font-size: 32px;
+      color: var(--primary-blue);
+    }
+
+    .sidebar-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sidebar-logo-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      margin-top: 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 15px;
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+      color: #9ca3af;
+      transition: color 0.3s ease;
+    }
+
+    .nav-item span {
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(
+        90deg,
+        var(--primary-blue) 0%,
+        #2563eb 100%
+      );
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .nav-item.logout {
+      margin-top: 8px;
+      color: #f87171;
+    }
+
+    .nav-item.logout:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+    }
+
+    .main-content-area {
+      background: radial-gradient(
+          circle at top left,
+          rgba(56, 189, 248, 0.07),
+          transparent 55%
+        ),
+        radial-gradient(
+          circle at bottom right,
+          rgba(37, 99, 235, 0.06),
+          transparent 55%
+        ),
+        var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ========= TOP BAR ========= */
+
+    .topbar {
+      height: 64px;
+      background-color: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px 0 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .topbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .topbar-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--text-primary);
+    }
+
+    .topbar-subtitle {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+    }
+
+    .topbar-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-color);
+    }
+
+    .topbar-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f9fafb;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 0 0 2px #e5e7eb;
+    }
+
+    .topbar-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .topbar-user-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-user-role {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .topbar-icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .topbar-icon-btn:hover {
+      background: var(--bg-secondary);
+      transform: translateY(-1px);
+    }
+
+    /* ========= PAGE CONTENT WRAPPER ========= */
+
+    .page-inner {
+      padding: 20px 28px 32px;
+      max-width: 1480px;
+      width: 100%;
+    }
+
+    /* ========= HEADER ========= */
+
+    .header {
+      background: transparent;
+      border-bottom: none;
+      padding: 4px 0 18px;
+      box-shadow: none;
+    }
+
+    .header-content {
+      max-width: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-header {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: radial-gradient(
+        circle at 0 0,
+        rgba(37, 99, 235, 0.12),
+        rgba(37, 99, 235, 0.02)
+      );
+      color: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.18);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-header:hover {
+      transform: translateY(-1px);
+      background-color: rgba(219, 234, 254, 0.8);
+      box-shadow: 0 14px 32px rgba(37, 99, 235, 0.24);
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ========= STATS GRID ========= */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background-color: var(--bg-primary);
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s ease;
+      position: relative;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 3px;
+      border-radius: 999px;
+      background: var(--accent-primary);
+      opacity: 0.85;
+    }
+
+    .stat-card:nth-child(2)::before {
+      background: var(--accent-success);
+    }
+
+    .stat-card:nth-child(3)::before {
+      background: var(--accent-warning);
+    }
+
+    .stat-card:nth-child(4)::before {
+      background: var(--accent-danger);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.09);
+      border-color: rgba(129, 140, 248, 0.7);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .stat-subtext {
+      color: var(--text-secondary);
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    /* ========= TABLE SECTION ========= */
+
+    .table-section {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .table-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #eff6ff, #eef2ff);
+    }
+
+    .table-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .table-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .table-header-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .table-header-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .search-input {
+      padding: 7px 11px;
+      font-size: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      min-width: 220px;
+      outline: none;
+      background-color: #f9fafb;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+    }
+
+    .filter-select {
+      padding: 7px 11px;
+      font-size: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      outline: none;
+      background-color: #f9fafb;
+    }
+
+    .filter-select:focus {
+      border-color: var(--accent-primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-small-primary {
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-small-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(37, 99, 235, 0.45);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background-color: #f9fafb;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: var(--text-primary);
+      background-color: #ffffff;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f9fafb;
+    }
+
+    tr:hover td {
+      background-color: #eef2ff;
+    }
+
+    /* ========= STATUS BADGE ========= */
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .status-running {
+      background-color: rgba(22, 163, 74, 0.13);
+      color: var(--accent-success);
+    }
+
+    .status-running::before {
+      background-color: var(--accent-success);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    .status-idle {
+      background-color: rgba(234, 179, 8, 0.09);
+      color: var(--accent-warning);
+    }
+
+    .status-idle::before {
+      background-color: var(--accent-warning);
+    }
+
+    .status-stopped {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: var(--accent-danger);
+    }
+
+    .status-stopped::before {
+      background-color: var(--accent-danger);
+    }
+
+    /* ========= ACTION BUTTONS ========= */
+
+    .action-buttons {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(37, 99, 235, 0.48);
+    }
+
+    .btn-secondary {
+      background-color: #f3f4f6;
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      background-color: rgba(248, 113, 113, 0.08);
+      color: var(--accent-danger);
+      border: 1px solid rgba(248, 113, 113, 0.7);
+    }
+
+    .btn-danger:hover {
+      background-color: rgba(248, 113, 113, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-primary);
+      background-color: var(--bg-secondary);
+    }
+
+    /* ========= MODALS ========= */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 23, 42, 0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 22px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.4);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .modal-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 22px;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.1s ease;
+    }
+
+    .close-btn:hover {
+      color: var(--accent-primary);
+      transform: translateY(-1px);
+    }
+
+    .modal-details {
+      display: grid;
+      gap: 14px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    /* Map wrapper inside modal */
+    #mapWrapper {
+      width: 100%;
+      height: 380px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    #mapLocation {
+      position: absolute;
+      inset-inline: 10px;
+      bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #e5e7eb;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #mapLocation::before {
+      content: '📍';
+      font-size: 12px;
+    }
+
+    #mapCoords {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    /* ========= FORM GRID ========= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 14px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 13px;
+      outline: none;
+      background-color: #f9fafb;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent-primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    /* ========= SCROLLBARS ========= */
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    /* ========= RESPONSIVE ========= */
+
+    @media (max-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .sidebar {
+        padding-inline: 10px;
+      }
+
+      .sidebar-logo-text,
+      .sidebar-section-label,
+      .nav-item span,
+      .nav-item-badge {
+        display: none;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding-inline: 10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .topbar {
+        padding-inline: 14px;
+        height: auto;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .topbar-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .page-inner {
+        padding: 16px 14px 24px;
+      }
+
+      .header-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .table-header-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .search-input {
+        flex: 1;
+        min-width: 0;
+      }
+
+      th,
+      td {
+        padding: 9px 10px;
+        font-size: 11px;
+      }
+
+      .detail-row {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        padding: 16px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-layout">
+    <!-- ========= SIDEBAR ========= -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class="fas fa-truck-moving"></i>
+        <div class="sidebar-logo-text">
+          <div class="sidebar-logo-title">FleetMaster</div>
+        </div>
+      </div>
+
+     <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ========= MAIN PANEL ========= -->
+    <div class="main-content-area">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">Fleet Overview</div>
+      <div class="topbar-subtitle">
+        Monitoring utilization, health &amp; live trip status
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-pill">Today ▪ <span id="topbar-date"></span></div>
+      <button class="topbar-icon-btn" title="Notifications">🔔</button>
+      <button class="topbar-icon-btn" title="Help">?</button>
+      <div class="topbar-user">
+        <div class="topbar-avatar">VV</div>
+        <div class="topbar-user-info">
+          <div class="topbar-user-name">Fleet Admin</div>
+          <div class="topbar-user-role">Operations</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Inner content -->
+  <main class="page-inner">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-top-row">
+          <div>
+            <h1>Fleet Management System</h1>
+            <p>
+              Real-time vehicle tracking, utilization, and maintenance overview
+            </p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-header" onclick="openVehicleForm('add')">
+              ➕ Add Vehicle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Vehicles</div>
+          <div class="stat-value" id="totalVehicles">0</div>
+          <div class="stat-subtext">Across all locations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Running</div>
+          <div class="stat-value" id="activeVehicles" style="color: var(--accent-success);">0</div>
+          <div class="stat-subtext">Currently on trip</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Idle</div>
+          <div class="stat-value" id="idleVehicles" style="color: var(--accent-warning);">0</div>
+          <div class="stat-subtext">Waiting for dispatch</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Stopped</div>
+          <div class="stat-value" id="stoppedVehicles" style="color: var(--accent-danger);">0</div>
+          <div class="stat-subtext">Parked / Under maintenance</div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="table-section">
+        <div class="table-header">
+          <div class="table-header-left">
+            <h2>Vehicle Fleet</h2>
+            <div class="table-header-sub">
+              Search, filter, and manage vehicles
+            </div>
+          </div>
+          <div class="table-header-right">
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Search by vehicle, model, driver, or location..."
+            />
+
+            <select id="statusFilter" class="filter-select">
+              <option value="all">All Statuses</option>
+              <option value="running">Running</option>
+              <option value="idle">Idle</option>
+              <option value="stopped">Stopped</option>
+            </select>
+
+            <button class="btn-small-primary" onclick="openVehicleForm('add')">
+              + Add Vehicle
+            </button>
+          </div>
+        </div>
+
+        <table id="vehicleTable">
+          <thead>
+            <tr>
+              <th>Vehicle Number</th>
+              <th>Model</th>
+              <th>Last Service Date</th>
+              <th>Status</th>
+              <th>Fuel</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- JS renders rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Map Modal -->
+<div id="mapModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="mapTitle">Vehicle Map</h2>
+      <button class="close-btn" onclick="closeModal('mapModal')">&times;</button>
+    </div>
+
+    <div class="modal-details">
+      <div id="mapWrapper">
+        <div id="map"></div>
+        <div id="mapLocation">Loading map...</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Coordinates</div>
+        <div class="detail-value" id="mapCoords">--</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Last Updated</div>
+        <div class="detail-value" id="mapTime">--</div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-label">Quick Action</div>
+        <div class="detail-value">
+          <button class="btn btn-secondary" id="openTripFromMapBtn">
+            View Trip History
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trip History Modal -->
+<div id="tripModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="tripTitle">Trip History</h2>
+      <button class="close-btn" onclick="closeModal('tripModal')">&times;</button>
+    </div>
+    <div class="modal-details" id="tripHistory">
+      <!-- History injected via JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Vehicle Modal -->
+<div id="vehicleFormModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="vehicleFormTitle">Add Vehicle</h2>
+      <button class="close-btn" onclick="closeModal('vehicleFormModal')">&times;</button>
+    </div>
+
+    <form id="vehicleForm">
+      <input type="hidden" id="vehicleId" />
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="vehicleNumberInput">Vehicle Number (Number Plate)</label>
+          <input
+            type="text"
+            id="vehicleNumberInput"
+            required
+            placeholder="e.g., TS09 AB 1234"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="modelInput">Model</label>
+          <input
+            type="text"
+            id="modelInput"
+            required
+            placeholder="e.g., Tata Ace XL"
+          />
+        </div>
+
+        
+
+        
+
+        <div class="form-group">
+          <label for="lastServiceInput">Last Service Date</label>
+          <input type="date" id="lastServiceInput" required />
+        </div>
+
+        <div class="form-group">
+          <label for="statusInput">Status</label>
+          <select id="statusInput" required>
+            <option value="running">Running</option>
+            <option value="idle">Idle</option>
+            <option value="stopped">Stopped</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fuelInput">Fuel (%)</label>
+          <input
+            type="number"
+            id="fuelInput"
+            min="0"
+            max="100"
+            required
+            placeholder="e.g., 80"
+          />
+        </div>
+
+        
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('vehicleFormModal')">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" id="vehicleFormSubmitBtn">
+          Save Vehicle
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+  <script>
+    // frontend script (replace existing frontend JS with this)
+(() => {
+  // Config
+  const API_URL = "http://localhost:5000/api/vehicles";
+  let vehicleData = [];
+  let currentFilter = "all";
+  let searchQuery = "";
+  let currentMapVehicleId = null;
+  let map;
+  let currentMarker = null;
+
+  // --- Utilities ---
+function safeDriverDisplay(v) {
+  if (v.driverName) return v.driverName;
+
+  // ✅ WHEN DRIVER IS POPULATED OBJECT
+  if (v.driver && typeof v.driver === "object") {
+    return v.driver.driver || v.driver.phone || v.driver._id || "";
+  }
+
+  // ✅ WHEN DRIVER IS JUST AN ID
+  return v.driver || "";
+}
+
+
+  function formatDateISO(d) {
+    if (!d) return "";
+    const dt = new Date(d);
+    if (isNaN(dt)) return d;
+    return dt.toLocaleDateString();
+  }
+
+  // Geocoding helper (OpenStreetMap Nominatim)
+  async function getCoordinates(placeName) {
+    if (!placeName) return null;
+    const url =
+      "https://nominatim.openstreetmap.org/search?format=json&q=" +
+      encodeURIComponent(placeName);
+
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "Accept-Language": "en"
+        }
+      });
+      const data = await res.json();
+      if (!data || !data.length) return null;
+      return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon)
+      };
+    } catch (err) {
+      console.error("Geocoding error:", err);
+      return null;
+    }
+  }
+
+  // --- Init UI & Map ---
+  function init() {
+    // topbar date
+    const dateEl = document.getElementById("topbar-date");
+    if (dateEl) {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleDateString(undefined, {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    // map
+    map = L.map("map").setView([17.385, 78.4867], 12);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    L.marker([17.385, 78.4867]).addTo(map).bindPopup("Your Map is Working 🚀");
+
+    // load data
+    loadVehicles();
+
+    // events
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        renderTable();
+      });
+    }
+
+    if (statusFilter) {
+      statusFilter.addEventListener("change", (e) => {
+        currentFilter = e.target.value;
+        renderTable();
+        updateStats();
+      });
+    }
+
+    const openTripFromMapBtn = document.getElementById("openTripFromMapBtn");
+    if (openTripFromMapBtn) {
+      openTripFromMapBtn.addEventListener("click", () => {
+        if (currentMapVehicleId != null) {
+          openTripModal(currentMapVehicleId);
+        }
+      });
+    }
+
+    // close modals on outside click
+    document.addEventListener("click", function (event) {
+      //const mapModal = document.getElementById("mapModal");
+      const tripModal = document.getElementById("tripModal");
+      const vehicleFormModal = document.getElementById("vehicleFormModal");
+
+     // if (event.target === mapModal) mapModal.classList.remove("active");
+      if (event.target === tripModal) tripModal.classList.remove("active");
+      if (event.target === vehicleFormModal) vehicleFormModal.classList.remove("active");
+    });
+
+    // form submit hook
+    const form = document.getElementById("vehicleForm");
+    if (form) form.addEventListener("submit", handleVehicleFormSubmit);
+  }
+
+  // --- Load / CRUD ---
+  async function loadVehicles() {
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error("Failed to fetch");
+      vehicleData = await res.json();
+      renderTable();
+      updateStats();
+    } catch (err) {
+      console.error("Error loading vehicles:", err);
+      alert("Failed to load vehicles. Make sure backend is running.");
+    }
+  }
+
+  async function saveVehicle(id, vehicleObj) {
+    const method = id ? "PUT" : "POST";
+    const url = id ? `${API_URL}/${id}` : API_URL;
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(vehicleObj)
+    });
+    if (!res.ok) throw new Error("Save failed");
+    return await res.json();
+  }
+
+  async function deleteVehicle(id) {
+    const confirmDelete = confirm("Are you sure you want to delete this vehicle?");
+    if (!confirmDelete) return;
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      await loadVehicles();
+    } catch (err) {
+      console.error("Error deleting vehicle:", err);
+      alert("Failed to delete vehicle.");
+    }
+  }
+
+  // --- Stats & Filtering ---
+  function updateStats() {
+    const total = vehicleData.length;
+    const running = vehicleData.filter((v) => v.status === "running").length;
+    const idle = vehicleData.filter((v) => v.status === "idle").length;
+    const stopped = vehicleData.filter((v) => v.status === "stopped").length;
+
+    document.getElementById("totalVehicles").textContent = total;
+    document.getElementById("activeVehicles").textContent = running;
+    document.getElementById("idleVehicles").textContent = idle;
+    document.getElementById("stoppedVehicles").textContent = stopped;
+  }
+
+  function getFilteredData() {
+    return vehicleData.filter((v) => {
+      const matchesStatus = currentFilter === "all" || v.status === currentFilter;
+
+     const combined = `
+  ${v.vehicleNumber || ""}
+  ${v.model || ""}
+  ${v.location || ""}
+`.toLowerCase();
+
+      const matchesSearch = combined.includes(searchQuery);
+
+      return matchesStatus && matchesSearch;
+    });
+  }
+
+  // --- Rendering ---
+  function renderTable() {
+    const tableBody = document.getElementById("tableBody");
+    if (!tableBody) return;
+    tableBody.innerHTML = "";
+
+    const filteredData = getFilteredData();
+
+    if (!filteredData.length) {
+      tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">No vehicles found.</td></tr>`;
+      return;
+    }
+
+    filteredData.forEach((vehicle) => {
+      const row = document.createElement("tr");
+      const statusClass = `status-${vehicle.status || ""}`;
+
+      row.innerHTML = `
+        <td><strong>${vehicle.vehicleNumber || ""}</strong></td>
+        <td>${vehicle.model || ""}</td>
+        <td>${formatDateISO(vehicle.lastServiceDate)}</td>
+        <td>
+          <span class="status-badge ${statusClass}">
+            ${vehicle.status ? vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1) : ""}
+          </span>
+        </td>
+        <td>${vehicle.fuel ?? 0}%</td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="openVehicleForm('edit','${vehicle._id}')">Edit</button>
+            <button class="btn btn-danger" onclick="confirmDelete('${vehicle._id}')">Delete</button>
+          </div>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+
+  // small helper to avoid inline confirm before binding
+  window.confirmDelete = function (id) {
+    deleteVehicle(id);
+  };
+
+  // --- Modal: Map ---
+  window.openMapModal = async function (vehicleId) {
+    const vehicle = vehicleData.find((v) => v._id === vehicleId);
+    if (!vehicle) return;
+
+    currentMapVehicleId = vehicleId;
+    document.getElementById("mapTitle").textContent = `Vehicle Map - ${vehicle.vehicleNumber || ""}`;
+    document.getElementById("mapLocation").textContent = vehicle.location || "Unknown";
+    document.getElementById("mapTime").textContent = vehicle.lastUpdated ? new Date(vehicle.lastUpdated).toLocaleString() : "Just now";
+
+    if (!vehicle.location) {
+  alert("Vehicle has no location set.");
+  return;
+}
+
+const coords = await getCoordinates(vehicle.location);
+
+if (!coords) {
+  alert("Unable to find location on map: " + vehicle.location);
+  document.getElementById("mapCoords").textContent = "Unknown";
+  return;
+}
+ else {
+      document.getElementById("mapCoords").textContent = `${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}`;
+
+      if (currentMarker) {
+        currentMarker.setLatLng([coords.lat, coords.lon]);
+      } else {
+        currentMarker = L.marker([coords.lat, coords.lon]).addTo(map);
+      }
+
+      map.setView([coords.lat, coords.lon], 14);
+    }
+
+    document.getElementById("mapModal").classList.add("active");
+    setTimeout(() => map.invalidateSize(), 200);
+  };
+
+  // --- Modal: Trip ---
+  window.openTripModal = function (vehicleId) {
+    const vehicle = vehicleData.find((v) => v._id === vehicleId);
+    if (!vehicle) return;
+
+    document.getElementById("tripTitle").textContent = `Trip History - ${vehicle.vehicleNumber || ""}`;
+
+    const tripHistory = document.getElementById("tripHistory");
+    const trips = vehicle.trips || [];
+
+    if (!trips.length) {
+      tripHistory.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">Info</div>
+          <div class="detail-value">No trip data available.</div>
+        </div>
+      `;
+    } else {
+      tripHistory.innerHTML = trips.map(trip => `
+        <div class="detail-row">
+          <div>
+            <div class="detail-label">Date</div>
+            <div class="detail-value">${escapeHtml(trip.date || "")}</div>
+          </div>
+          <div style="grid-column: 2;">
+            <div class="detail-label">Route</div>
+            <div class="detail-value">${escapeHtml(trip.route || "")}</div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div>
+            <div class="detail-label">Distance</div>
+            <div class="detail-value">${escapeHtml(trip.distance || "")}</div>
+          </div>
+          <div style="grid-column: 2;">
+            <div class="detail-label">Duration</div>
+            <div class="detail-value">${escapeHtml(trip.duration || "")}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("tripModal").classList.add("active");
+  };
+
+  // --- Modal: Add/Edit vehicle ---
+  window.openVehicleForm = function (mode, vehicleId = null) {
+    const titleEl = document.getElementById("vehicleFormTitle");
+    const submitBtn = document.getElementById("vehicleFormSubmitBtn");
+    const form = document.getElementById("vehicleForm");
+
+    form.reset();
+    document.getElementById("vehicleId").value = "";
+
+    if (mode === "add") {
+      titleEl.textContent = "Add Vehicle";
+      submitBtn.textContent = "Add Vehicle";
+      document.getElementById("statusInput").value = "idle";
+    } else if (mode === "edit" && vehicleId != null) {
+      titleEl.textContent = "Edit Vehicle";
+      submitBtn.textContent = "Save Changes";
+
+      const vehicle = vehicleData.find((v) => v._id === vehicleId);
+      if (vehicle) {
+        document.getElementById("vehicleId").value = vehicle._id;
+        document.getElementById("vehicleNumberInput").value = vehicle.vehicleNumber || "";
+        document.getElementById("modelInput").value = vehicle.model || "";
+        document.getElementById("lastServiceInput").value = vehicle.lastServiceDate ? new Date(vehicle.lastServiceDate).toISOString().substring(0,10) : "";
+        document.getElementById("statusInput").value = vehicle.status || "idle";
+        document.getElementById("fuelInput").value = vehicle.fuel ?? 0;
+      }
+    }
+
+    document.getElementById("vehicleFormModal").classList.add("active");
+  };
+
+  // Escape helper for safe innerHTML use
+  function escapeHtml(unsafe) {
+    if (!unsafe && unsafe !== 0) return "";
+    return ("" + unsafe)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // Form submit handler
+  async function handleVehicleFormSubmit(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("vehicleId").value;
+
+    const vehicleObj = {
+      vehicleNumber: document.getElementById("vehicleNumberInput").value.trim(),
+      model: document.getElementById("modelInput").value.trim(),
+      lastServiceDate: document.getElementById("lastServiceInput").value || null,
+      status: document.getElementById("statusInput").value,
+      fuel: Number(document.getElementById("fuelInput").value),
+    };
+
+    // validation (driver optional if you want)
+    if (
+      !vehicleObj.vehicleNumber ||
+      !vehicleObj.model ||
+      !vehicleObj.status ||
+      isNaN(vehicleObj.fuel) 
+    ) {
+      alert("Please fill all required fields correctly.");
+      return;
+    }
+
+    try {
+      await saveVehicle(id, vehicleObj);
+      closeModal("vehicleFormModal");
+      await loadVehicles();
+    } catch (err) {
+      console.error("Error saving vehicle:", err);
+      alert("Failed to save vehicle.");
+    }
+  }
+
+  window.handleVehicleFormSubmit = handleVehicleFormSubmit;
+
+  // Close modal helper
+  window.closeModal = function (modalId) {
+    const el = document.getElementById(modalId);
+    if (el) el.classList.remove("active");
+  };
+
+  // init on load
+  window.addEventListener("load", init);
+
+  // expose a few utilities globally for inline onclick used in HTML
+  window.openTripModal = window.openTripModal || function (id) { openTripModal(id); };
+  window.openMapModal = window.openMapModal || function (id) { window.openMapModal(id); };
+  window.openVehicleForm = window.openVehicleForm || function (m, id) { openVehicleForm(m, id); };
+})();
+
+  </script>
+</body>
+</html>

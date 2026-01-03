@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fleet Reports | FleetMaster</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+</head>
+<body>
+  <!-- Top Navbar (like your screenshot) -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <div class="nav-title">
+        <h1>Fleet Overview</h1>
+        <p>Monitoring utilization, health & live trip status</p>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="date-pill">
+        <i class="fa-regular fa-calendar"></i>
+        <span id="todayText">Today</span>
+      </div>
+      <button class="icon-btn">
+        <i class="fa-regular fa-bell"></i>
+      </button>
+      <div class="profile-pill">
+        <div class="avatar-circle">FA</div>
+        <div class="profile-text">
+          <span class="profile-name">Fleet Admin</span>
+          <span class="profile-role">Operations</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-truck-moving"></i>
+
+            <h2>FleetMaster</h2>
+        </div>
+         <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+  <!-- Main Page Container -->
+  <main class="page-container">
+    <!-- Page header -->
+    <section class="page-header">
+      <div>
+        <h2>Fleet Reports Center</h2>
+        <p>Analyze trips, drivers, vehicles, violations, and maintenance.</p>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs-wrapper">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="trip-reports">
+          <i class="fa-solid fa-road"></i>
+          Trip Reports
+        </button>
+        <button class="tab-btn" data-tab="driver-performance">
+          <i class="fa-solid fa-id-card-clip"></i>
+          Driver Performance
+        </button>
+        <button class="tab-btn" data-tab="vehicle-usage">
+          <i class="fa-solid fa-truck-front"></i>
+          Vehicle Usage
+        </button>
+        <button class="tab-btn" data-tab="violations-report">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Violations
+        </button>
+        <button class="tab-btn" data-tab="maintenance-report">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          Maintenance
+        </button>
+      </div>
+    </section>
+
+    <!-- Report sections -->
+    <section class="reports-section">
+
+      <!-- Trip Reports -->
+      <div class="tab-content active" id="trip-reports">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Trip Reports</h3>
+              <p>Overview of all completed, running, and scheduled trips.</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn secondary-btn download-pdf" data-table-id="tripTable">
+                <i class="fa-regular fa-file-pdf"></i>
+                Download PDF
+              </button>
+              <button class="btn primary-btn export-excel" data-table-id="tripTable">
+                <i class="fa-regular fa-file-excel"></i>
+                Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="tripDateFilter">Date</label>
+              <input type="date" id="tripDateFilter" class="filter-input" />
+            </div>
+            <div class="filter-group">
+              <label for="tripStatusFilter">Status</label>
+              <select id="tripStatusFilter" class="filter-input">
+                <option value="">All</option>
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="tripTable">
+              <thead>
+                <tr>
+                  <th>Trip ID</th>
+                  <th>Driver</th>
+                  <th>Vehicle</th>
+                  <th>Start</th>
+                  <th>Destination</th>
+                  <th>Distance</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Driver Performance -->
+      <div class="tab-content" id="driver-performance">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Driver Performance</h3>
+              <p>Safety, efficiency, and on-time delivery metrics.</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn secondary-btn download-pdf" data-table-id="driverTable">
+                <i class="fa-regular fa-file-pdf"></i>
+                Download PDF
+              </button>
+              <button class="btn primary-btn export-excel" data-table-id="driverTable">
+                <i class="fa-regular fa-file-excel"></i>
+                Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="driverMonthFilter">Month</label>
+              <input type="month" id="driverMonthFilter" class="filter-input" />
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="driverTable">
+              <thead>
+                <tr>
+                  <th>Driver</th>
+                  <th>Employee ID</th>
+                  <th>Miles</th>
+                  <th>Safety Score</th>
+                  <th>Efficiency</th>
+                  <th>On-Time</th>
+                  <th>Trips</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Usage -->
+      <div class="tab-content" id="vehicle-usage">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Vehicle Usage</h3>
+              <p>Utilization & fuel efficiency across your fleet.</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn secondary-btn download-pdf" data-table-id="vehicleTable">
+                <i class="fa-regular fa-file-pdf"></i>
+                Download PDF
+              </button>
+              <button class="btn primary-btn export-excel" data-table-id="vehicleTable">
+                <i class="fa-regular fa-file-excel"></i>
+                Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="vehicleStatusFilter">Status</label>
+              <select id="vehicleStatusFilter" class="filter-input">
+                <option value="">All</option>
+                <option value="Active">Active</option>
+                <option value="Idle">Idle</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="vehicleTable">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Type</th>
+                  <th>Current Mileage</th>
+                  <th>Month Miles</th>
+                  <th>Utilization</th>
+                  <th>Fuel</th>
+                  <th>Avg MPG</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Violations -->
+      <div class="tab-content" id="violations-report">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Violations</h3>
+              <p>Speeding, harsh braking, and other safety violations.</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn secondary-btn download-pdf" data-table-id="violationsTable">
+                <i class="fa-regular fa-file-pdf"></i>
+                Download PDF
+              </button>
+              <button class="btn primary-btn export-excel" data-table-id="violationsTable">
+                <i class="fa-regular fa-file-excel"></i>
+                Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="violationTypeFilter">Type</label>
+              <select id="violationTypeFilter" class="filter-input">
+                <option value="">All</option>
+                <option value="Speeding">Speeding</option>
+                <option value="Hard Braking">Hard Braking</option>
+                <option value="Sharp Turn">Sharp Turn</option>
+                <option value="Harsh Acceleration">Harsh Acceleration</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="violationsTable">
+              <thead>
+                <tr>
+                  <th>Date/Time</th>
+                  <th>Driver</th>
+                  <th>Vehicle</th>
+                  <th>Type</th>
+                  <th>Location</th>
+                  <th>Severity</th>
+                  <th>Impact</th>
+                  <th>Reviewed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maintenance -->
+      <div class="tab-content" id="maintenance-report">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Maintenance Report</h3>
+              <p>Upcoming, ongoing, and overdue maintenance tasks.</p>
+            </div>
+            <div class="card-actions">
+              <button class="btn secondary-btn download-pdf" data-table-id="maintenanceTable">
+                <i class="fa-regular fa-file-pdf"></i>
+                Download PDF
+              </button>
+              <button class="btn primary-btn export-excel" data-table-id="maintenanceTable">
+                <i class="fa-regular fa-file-excel"></i>
+                Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group">
+              <label for="maintStatusFilter">Status</label>
+              <select id="maintStatusFilter" class="filter-input">
+                <option value="">All</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="maintenanceTable">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Mileage</th>
+                  <th>Service Type</th>
+                  <th>Last Service</th>
+                  <th>Next Due</th>
+                  <th>Days Left</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <table class="styled-table">
+    <thead>
+        <tr>
+            <th>Trip ID</th>
+            <th>Driver</th>
+            <th>Vehicle</th>
+            <th>Start</th>
+            <th>Destination</th>
+            <th>Distance</th>
+            <th>Duration</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="tripReportTableBody"></tbody>
+</table>
+
+
+  <!-- GLOBAL SETTINGS SCRIPT (Add This First) -->
+    <script src="/global/globalSettings.js"></script>
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

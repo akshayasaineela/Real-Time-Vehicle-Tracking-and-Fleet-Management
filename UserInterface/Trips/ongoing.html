@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ongoing Trips</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #f3f5fb;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .page-header {
+      padding: 22px 28px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 26px;
+      padding: 24px 28px;
+    }
+
+    .trip-card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      transition: 0.25s ease;
+    }
+
+    .trip-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+
+    .trip-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 8px;
+    }
+
+    .trip-row {
+      font-size: 14px;
+      color: #374151;
+      margin: 4px 0;
+    }
+
+    .trip-label {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .status-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #22c55e;
+      color: white;
+      border-radius: 999px;
+    }
+
+    .empty-msg {
+      padding: 40px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">🚚 Ongoing Trips</div>
+
+<div id="tripGrid" class="trip-grid"></div>
+
+<script>
+const apiBase = "http://localhost:5000/api";
+
+async function loadTrips() {
+  const res = await fetch(`${apiBase}/trips?status=ongoing`);
+  const trips = await res.json();
+
+  const grid = document.getElementById("tripGrid");
+
+  if (trips.length === 0) {
+    grid.innerHTML = `<div class="empty-msg">No ongoing trips right now.</div>`;
+    return;
+  }
+
+  grid.innerHTML = trips.map(t => `
+    <div class="trip-card">
+      <div class="trip-title">${t.name || "Live Trip"}</div>
+
+      <div class="trip-row"><span class="trip-label">From:</span> ${t.origin}</div>
+      <div class="trip-row"><span class="trip-label">To:</span> ${t.destination}</div>
+<div class="trip-row">
+    <span class="trip-label">Driver:</span>
+    ${t.driver?.driver || t.driver?.name || t.driver?.driverName || "N/A"}
+</div>
+    <div class="trip-row"><span class="trip-label">Vehicle: ${t.vehicle?.vehicleNumber || t.vehicle || "N/A"}
+</div>
+
+      <span class="status-badge">ONGOING</span>
+    </div>
+  `).join("");
+}
+
+loadTrips();
+</script>
+
+</body>
+</html>

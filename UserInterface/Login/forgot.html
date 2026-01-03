@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - FleetTrack</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <h2>Forgot Password</h2>
+        <p class="auth-subtitle">Enter your registered email to receive an OTP</p>
+
+        <form id="forgotForm">
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <button type="submit" class="button-primary full">Send OTP</button>
+        </form>
+
+        <p class="auth-footer">
+            Remembered password? <a href="login.html">Login</a>
+        </p>
+    </div>
+
+   <script>
+const api = "http://localhost:5000/api/auth";
+
+document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+
+    const res = await fetch(`${api}/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        localStorage.setItem("resetEmail", email);
+        window.location.href = "verify.html";
+    } else {
+        alert(data.message);
+    }
+});
+</script>
+
+
+
+   
+
+</body>
+</html>

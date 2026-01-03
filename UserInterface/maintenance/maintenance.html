@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FleetMaster – Maintenance</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-truck-moving"></i>
+            <h2>FleetMaster</h2>
+        </div>
+        
+      <nav class="sidebar-nav">
+            <a href="/UserInterface/dashboard/dashboards.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/UserInterface/VehiclesPage/vehicles.html" class="nav-item">
+                <i class="fas fa-car"></i>
+                <span>Vehicles</span>
+            </a>
+            <a href="/UserInterface/DriversPage/drivers.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Drivers</span>
+            </a>
+            <a href="/UserInterface/Trips/trips.html" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </a>
+            <a href="/UserInterface/TrackingMap/tracking.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Live Tracking</span>
+            </a>
+            <a href="/UserInterface/TripReports/reports.html" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Trips Reports</span>
+            </a>
+            <a href="/UserInterface/alerts/alerts.html" class="nav-item">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </a>
+            <a href="/UserInterface/maintenance/maintenance.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="/UserInterface/settingss/settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            <a href="/UserInterface/Login/login.html" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>Maintenance Dashboard</h1>
+        <p class="header-subtitle">Monitor vehicle health, service status & upcoming work</p>
+      </div>
+      <div class="header-right">
+        <div class="notification-bell">
+          <i class="fas fa-bell"></i>
+          <span class="badge">4</span>
+        </div>
+        <div class="user-profile">
+          <img src="/placeholder.svg?height=40&width=40" alt="User" />
+          <div class="user-info">
+            <span class="user-name">John Doe</span>
+            <span class="user-role">Maintenance Lead</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="fas fa-tools"></i></div>
+        <div class="stat-info">
+          <h3>Total Records</h3>
+          <p class="stat-number" id="statTotal">0</p>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-info">
+          <h3>Healthy</h3>
+          <p class="stat-number" id="statGood">0</p>
+        </div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+        <div class="stat-info">
+          <h3>Upcoming</h3>
+          <p class="stat-number" id="statUpcoming">0</p>
+        </div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon"><i class="fas fa-skull-crossbones"></i></div>
+        <div class="stat-info">
+          <h3>Overdue</h3>
+          <p class="stat-number" id="statOverdue">0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <section class="drivers-controls">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search by vehicle id / number..."
+        />
+      </div>
+
+      <div class="sort-buttons">
+        <button class="btn btn-secondary active" data-sort="nextService">
+          Sort by Next Service
+        </button>
+        <button class="btn btn-secondary" data-sort="vehicle">
+          Sort by Vehicle
+        </button>
+        <button class="btn btn-secondary" data-sort="status">
+          Sort by Status
+        </button>
+      </div>
+
+      <div class="controls-right">
+        <select id="statusFilter" class="btn btn-secondary">
+          <option value="all">All Status</option>
+          <option value="good">Healthy</option>
+          <option value="upcoming">Upcoming</option>
+          <option value="overdue">Overdue</option>
+        </select>
+        <button class="btn btn-secondary" id="exportBtn">
+          <i class="fas fa-file-export"></i> Export CSV
+        </button>
+        <button class="btn btn-primary" id="addRecordBtn">
+          <i class="fas fa-plus"></i> Add Record
+        </button>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="analytics-section">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Status Distribution</h3>
+          <span class="chart-subtitle">Healthy vs Upcoming vs Overdue</span>
+        </div>
+        <canvas id="statusChart"></canvas>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Service Types</h3>
+          <span class="chart-subtitle">Full, Engine, Tyre, Brake etc.</span>
+        </div>
+        <canvas id="typeChart"></canvas>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Upcoming Service Load</h3>
+          <span class="chart-subtitle">Services grouped by month</span>
+        </div>
+        <canvas id="scheduleChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Neon bar for crazy look -->
+    <div class="neon-bar"></div>
+
+    <!-- Table -->
+    <section class="table-section">
+      <div class="section-header">
+        <h3>Maintenance Records</h3>
+        <span id="tableCount"></span>
+      </div>
+      <div class="table-wrapper">
+        <table class="maintenance-table">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>Last Service</th>
+              <th>Next Service</th>
+              <th>Service Type</th>
+              <th>Status</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="maintenanceBody">
+            <!-- injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal" id="maintModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModalBtn">×</button>
+      <h2 class="modal-title" id="modalTitle">Add Maintenance Record</h2>
+
+      <form id="maintForm" class="add-driver-form">
+        <div class="form-group">
+          <label class="form-label" for="vehicle">Vehicle *</label>
+          <input id="vehicle" class="form-input" placeholder="TS09 AB 1247" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="lastService">Last Service *</label>
+            <input id="lastService" type="date" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="nextService">Next Service *</label>
+            <input id="nextService" type="date" class="form-input" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="serviceType">Service Type *</label>
+          <input id="serviceType" class="form-input" placeholder="Full / Engine / Tyre / Brake..." required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="notes">Notes</label>
+          <input id="notes" class="form-input" placeholder="Optional notes..." />
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GLOBAL SETTINGS SCRIPT (Add This First) -->
+    <script src="/global/globalSettings.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
