@@ -84,7 +84,7 @@ Driver behavior data is stored and analyzed for performance insights
 
 # ⚙️ Setup & Run
 ## Clone the Repository
-git clone https://github.com/vivekvardhan592/TrackSecure.git
+git clone https://github.com/akshayasaineela/Real-Time-Vehicle-Tracking-and-Fleet-Management.git
 cd TrackSecure
 
 ## Backend Setup
