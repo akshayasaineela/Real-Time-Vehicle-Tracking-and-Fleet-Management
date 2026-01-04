@@ -96,11 +96,14 @@ npm install
 #### Create a .env file in the backend directory:
 
 MONGO_URI=your_mongodb_connection_string
+
 JWT_SECRET=your_jwt_secret
+
 EMAIL_USER=your_email
+
 EMAIL_PASS=your_email_app_password
 
-##Start the Server
+## Start the Server
 npm start
 
 Open in Browser
